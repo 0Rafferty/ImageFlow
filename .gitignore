@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.claude
+dist/
+build/
+*.egg-info/
+CLAUDE.md
+.env
+.venv
+env/
+venv/
+# IDE
+.vscode/
+.idea/
+# OS
+.DS_Store
+Thumbs.db
