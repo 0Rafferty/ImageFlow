@@ -53,6 +53,32 @@ def resize(input_path, width, height, output):
         click.echo(f"Error processing {input_path}: {e}")
 
 @cli.command()
+@click.argument('input_path')
+@click.option('--format', '-f', required=True, help='Target format (jpg, png, webp, etc.)')
+@click.option('--output', '-o', help='Output file path')
+def convert(input_path, format, output):
+    """Convert image format"""
+    if not os.path.exists(input_path):
+        click.echo(f"Error: File {input_path} not found")
+        return
+
+    try:
+        with Image.open(input_path) as img:
+            if not output:
+                name = os.path.splitext(input_path)[0]
+                output = f"{name}.{format.lower()}"
+
+            if format.lower() == 'jpg' or format.lower() == 'jpeg':
+                if img.mode in ('RGBA', 'LA', 'P'):
+                    img = img.convert('RGB')
+
+            img.save(output, format=format.upper())
+            click.echo(f"Converted {input_path} to {format.upper()} -> {output}")
+
+    except Exception as e:
+        click.echo(f"Error converting {input_path}: {e}")
+
+@cli.command()
 def version():
     """Show version info"""
     click.echo("ImageFlow v0.1.0")
