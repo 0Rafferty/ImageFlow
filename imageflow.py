@@ -147,6 +147,29 @@ def batch(directory, pattern, width, height, format, output_dir):
     click.echo(f"Batch processing complete. Processed {processed} files.")
 
 @cli.command()
+@click.argument('input_path')
+def info(input_path):
+    """Show image information"""
+    if not os.path.exists(input_path):
+        click.echo(f"Error: File {input_path} not found")
+        return
+
+    try:
+        with Image.open(input_path) as img:
+            click.echo(f"File: {input_path}")
+            click.echo(f"Format: {img.format}")
+            click.echo(f"Mode: {img.mode}")
+            click.echo(f"Size: {img.size[0]}x{img.size[1]}")
+
+            if hasattr(img, '_getexif') and img._getexif():
+                click.echo("EXIF data: Present")
+            else:
+                click.echo("EXIF data: None")
+
+    except Exception as e:
+        click.echo(f"Error reading {input_path}: {e}")
+
+@cli.command()
 def version():
     """Show version info"""
     click.echo("ImageFlow v0.1.0")
